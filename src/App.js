@@ -1,26 +1,72 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react'
+import NumberInput from './components/NumberInput/NumberInput'
+import StarshipList from './components/StarshipList/StarshipsList'
+import Pages from './components/Pages/Pages'
+import Loading from './components/Loading/Loading'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import './App.css'
+
+const initialState = {
+  count: 0,
+  next: null,
+  previous: null,
+  results: []
 }
 
-export default App;
+function App() {
+
+  const [distanceInMGLT, setDistanceInMGLT] = useState()
+  const [data, setData] = useState(initialState)
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    fetchStarships()
+  }, [])
+
+  function onBlur(value) {
+    setDistanceInMGLT(value)
+  }
+
+  function fetchStarships(url = 'https://swapi.dev/api/starships/') {
+    setLoading(true)
+    fetch(url)
+      .then(response => response.json())
+      .then(data => setData(data))
+      .catch(() => setData(initialState))
+      .finally(() => setLoading(false)) 
+  }
+
+  return (
+    <>
+      <div className="app">
+        <h1>Stars wars travel planner</h1>
+        {
+          !loading ? 
+          <div>
+            <NumberInput
+              value={distanceInMGLT}
+              onBlur={onBlur}
+            />
+            <StarshipList
+              distance={distanceInMGLT}
+              starships={data.results}
+            />
+            <Pages 
+              next={data.next ? () => fetchStarships(data.next) : null}
+              previous={data.previous ? () => fetchStarships(data.previous) : null}
+            />
+          </div> 
+          : <div>
+              <Loading />
+              <p>Loading starship data...</p>
+            </div> 
+        }
+        <footer>
+          <small>Desenvolvido por Cleiton Luiz Rocha Teoodoro</small>
+        </footer>
+      </div>
+    </>
+  )
+}
+
+export default App

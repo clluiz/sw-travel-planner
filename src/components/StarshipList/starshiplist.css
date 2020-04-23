@@ -1,0 +1,17 @@
+.starship-list {
+  border: 1px solid #EEEEEE;
+  list-style-type: none;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  padding: 50px;
+  -webkit-box-shadow: 4px 3px 8px 7px rgba(0,0,0,0.75);
+  -moz-box-shadow: 4px 3px 8px 7px rgba(0,0,0,0.75);
+  box-shadow: 4px 3px 8px 7px rgba(0,0,0,0.75);
+}
+
+.starship-list li:nth-child(odd) {
+  background-color: #CCCCCC;
+  width: 100%;
+}
